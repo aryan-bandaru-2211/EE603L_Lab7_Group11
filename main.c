@@ -14,8 +14,8 @@
 #define GREEN_LED (1<<3)
 #define SW2 (1<<4)
 #define SW1 (1<<0)
-void portf_init();
 
+void portf_init();
 
 int main(void)
 {
@@ -48,6 +48,7 @@ int main(void)
 
 void portf_init()
 {
+   //Function to initialize all switch and led pins on PORTF
    SYSCTL_RCGC2_R |= 0x00000020;//Enable GPIO
 
    GPIO_PORTF_LOCK_R = 0x4C4F434B;
@@ -63,16 +64,14 @@ void portf_init()
 
 void SysTickHandler(void)
 {
+    //Whenever the interrupt is triggered complement the RED led
     GPIO_PORTF_DATA_R ^= RED_LED;
 }
 
 void PortFHandler(void)
 {
-//    if(GPIO_PORTF_MIS_R & SW1)
-//    {
-//        GPIO_PORTF_DATA_R ^= RED_LED;
-//        GPIO_PORTF_ICR_R  = SW1;
-//    }
+    //If an interrupt is triggered by PORTF read portf values
+    // If SW2 is used to trigger the BLUE led and clear the interrupt flag
     if(GPIO_PORTF_MIS_R & SW2)
     {
         GPIO_PORTF_DATA_R ^= BLUE_LED;
